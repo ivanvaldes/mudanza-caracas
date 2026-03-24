@@ -600,6 +600,45 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ADD / DELETE TASK */
+  .add-task-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .add-task-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(245,166,35,0.05);
+  }
+
+  .delete-task-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    margin-left: 4px;
+  }
+  .delete-task-btn:hover {
+    background: rgba(232,86,58,0.15);
+    color: var(--accent2);
+  }
 </style>
 </head>
 <body>
@@ -1507,13 +1546,118 @@ function startFirebaseSync() {
   });
 }
 
-// Save to Firebase
+const CUSTOM_DOC_REF = doc(db, 'plan', 'custom_tasks');
+let customTasks = []; // { id, group, text, priority, done }
+
+// ---- Custom task helpers ----
+function saveCustomTasks() {
+  return setDoc(CUSTOM_DOC_REF, { tasks: customTasks, updatedAt: new Date().toISOString() });
+}
+
+function renderCustomTask(task) {
+  // Find the task-list inside the phase-card that matches this group
+  // Custom tasks are appended to the LAST task-list of their group
+  const lists = document.querySelectorAll(`.task-item[data-group="${task.group}"]`);
+  if (!lists.length) return;
+  // Find parent task-list of last matching item
+  const lastItem = lists[lists.length - 1];
+  const taskList = lastItem.closest('.task-list');
+  if (!taskList) return;
+  if (document.querySelector(`[data-custom-id="${task.id}"]`)) return; // already rendered
+
+  const div = document.createElement('div');
+  div.className = 'task-item custom-task' + (task.done ? ' done' : '');
+  div.dataset.id = task.id;
+  div.dataset.customId = task.id;
+  div.dataset.group = task.group;
+  div.innerHTML = `
+    <div class="task-check">✓</div>
+    <div class="task-text">${task.text}</div>
+    <span class="task-tag tag-${task.priority || 'media'}">${(task.priority||'media').toUpperCase()}</span>
+    <button class="delete-task-btn" data-id="${task.id}" title="Eliminar tarea">✕</button>
+  `;
+  div.querySelector('.task-check').addEventListener('click', () => toggleTask(div));
+  div.querySelector('.task-text').addEventListener('click', () => toggleTask(div));
+  div.querySelector('.delete-task-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    deleteCustomTask(task.id);
+  });
+  taskList.appendChild(div);
+}
+
+function deleteCustomTask(id) {
+  if (!confirm('¿Eliminar esta tarea?')) return;
+  customTasks = customTasks.filter(t => t.id !== id);
+  const el = document.querySelector(`[data-custom-id="${id}"]`);
+  if (el) el.remove();
+  saveCustomTasks().then(() => { setSyncStatus('saved'); updateProgress(); });
+}
+
+// ---- Add task modal ----
+function openAddTaskModal(group) {
+  document.getElementById('modal-group').value = group;
+  document.getElementById('modal-text').value = '';
+  document.getElementById('modal-priority').value = 'media';
+  document.getElementById('add-task-modal').style.display = 'flex';
+  setTimeout(() => document.getElementById('modal-text').focus(), 100);
+}
+
+function closeAddTaskModal() {
+  document.getElementById('add-task-modal').style.display = 'none';
+}
+
+async function confirmAddTask() {
+  const group = document.getElementById('modal-group').value;
+  const text = document.getElementById('modal-text').value.trim();
+  const priority = document.getElementById('modal-priority').value;
+  if (!text) { document.getElementById('modal-text').focus(); return; }
+
+  const task = {
+    id: 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    group, text, priority, done: false
+  };
+  customTasks.push(task);
+  renderCustomTask(task);
+  closeAddTaskModal();
+  setSyncStatus('saving');
+  try {
+    await saveCustomTasks();
+    setSyncStatus('saved');
+    updateProgress();
+  } catch(e) { setSyncStatus('error'); }
+}
+
+// Listen for custom tasks from Firebase
+function startCustomTasksSync() {
+  onSnapshot(CUSTOM_DOC_REF, (snap) => {
+    if (snap.exists()) {
+      customTasks = snap.data().tasks || [];
+      // Remove old custom task elements first
+      document.querySelectorAll('.custom-task').forEach(el => el.remove());
+      customTasks.forEach(renderCustomTask);
+      // Reapply done state
+      customTasks.forEach(t => {
+        const el = document.querySelector(`[data-custom-id="${t.id}"]`);
+        if (el) el.classList.toggle('done', !!t.done);
+      });
+      updateProgress();
+    }
+  });
+}
+
+// Override saveTasks to also persist custom task done states
+const _origSaveTasks = saveTasks;
 async function saveTasks() {
   setSyncStatus('saving');
   const done = [];
   document.querySelectorAll('.task-item.done').forEach(t => done.push(t.dataset.id));
+  // Update done state in customTasks array too
+  customTasks.forEach(t => { t.done = done.includes(t.id); });
   try {
-    await setDoc(DOC_REF, { done, updatedAt: new Date().toISOString() });
+    await Promise.all([
+      setDoc(DOC_REF, { done, updatedAt: new Date().toISOString() }),
+      saveCustomTasks()
+    ]);
     setSyncStatus('saved');
   } catch(e) {
     console.error(e);
@@ -1521,10 +1665,21 @@ async function saveTasks() {
   }
 }
 
-function toggleTask(el) {
-  el.classList.toggle('done');
-  saveTasks();
-  updateProgress();
+// Inject "Add task" button into every phase-card
+function injectAddButtons() {
+  document.querySelectorAll('.phase-card').forEach(card => {
+    const taskList = card.querySelector('.task-list');
+    if (!taskList) return;
+    // Get group from first task item
+    const firstTask = card.querySelector('.task-item[data-group]');
+    if (!firstTask) return;
+    const group = firstTask.dataset.group;
+    const btn = document.createElement('button');
+    btn.className = 'add-task-btn';
+    btn.innerHTML = '＋ Agregar tarea';
+    btn.addEventListener('click', () => openAddTaskModal(group));
+    card.appendChild(btn);
+  });
 }
 
 function getGroupProgress(group) {
@@ -1649,6 +1804,8 @@ function showPanel(name) {
 
 // Init — start Firebase sync (loads tasks from cloud)
 startFirebaseSync();
+injectAddButtons();
+startCustomTasksSync();
 
 // Animate bars on load
 setTimeout(updateProgress, 200);
@@ -1743,6 +1900,19 @@ document.getElementById('pwd-input').addEventListener('keydown', e => {
 window.toggleTask = toggleTask;
 window.showPanel = showPanel;
 window.checkPassword = checkPassword;
+window.openAddTaskModal = openAddTaskModal;
+window.closeAddTaskModal = closeAddTaskModal;
+window.confirmAddTask = confirmAddTask;
+window.selectPriority = function(val) {
+  document.getElementById('modal-priority').value = val;
+  document.querySelectorAll('.pri-btn').forEach(b => {
+    const isActive = b.dataset.val === val;
+    const colors = { alta: 'var(--accent2)', media: 'var(--accent)', baja: 'var(--green)', yasmin: 'var(--yasmin)' };
+    b.style.borderColor = isActive ? colors[val] : 'var(--border)';
+    b.style.background = isActive ? `rgba(${val==='alta'?'232,86,58':val==='media'?'245,166,35':val==='baja'?'46,204,113':'232,124,160'},0.1)` : 'transparent';
+    b.style.color = colors[b.dataset.val];
+  });
+};
 
 // Check existing session on load
 if (sessionStorage.getItem(SESSION_KEY) === '1') {
@@ -1758,6 +1928,39 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   }
 }
 </script>
+<!-- ADD TASK MODAL -->
+<div id="add-task-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:440px;margin:16px;animation:fadeIn 0.25s ease;">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;">➕ Nueva Tarea</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:24px;">Se sincroniza con Yasmin en tiempo real</div>
+    <input type="hidden" id="modal-group" />
+    <textarea id="modal-text" placeholder="Describe la tarea..." rows="3"
+      style="width:100%;padding:12px 14px;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;outline:none;margin-bottom:14px;transition:border-color 0.2s;"
+      onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Prioridad</div>
+      <div style="display:flex;gap:8px;">
+        <label style="flex:1;cursor:pointer;">
+          <input type="radio" name="modal-pri" id="modal-priority" value="alta" style="display:none;" />
+          <div class="pri-btn" data-val="alta" style="text-align:center;padding:8px;border-radius:8px;border:1.5px solid var(--border);font-size:12px;font-weight:600;color:var(--accent2);transition:all 0.15s;cursor:pointer;" onclick="selectPriority('alta')">🔴 Alta</div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <div class="pri-btn active-pri" data-val="media" style="text-align:center;padding:8px;border-radius:8px;border:1.5px solid var(--accent);background:rgba(245,166,35,0.1);font-size:12px;font-weight:600;color:var(--accent);transition:all 0.15s;cursor:pointer;" onclick="selectPriority('media')">🟡 Media</div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <div class="pri-btn" data-val="baja" style="text-align:center;padding:8px;border-radius:8px;border:1.5px solid var(--border);font-size:12px;font-weight:600;color:var(--green);transition:all 0.15s;cursor:pointer;" onclick="selectPriority('baja')">🟢 Baja</div>
+        </label>
+        <label style="flex:1;cursor:pointer;">
+          <div class="pri-btn" data-val="yasmin" style="text-align:center;padding:8px;border-radius:8px;border:1.5px solid var(--border);font-size:12px;font-weight:600;color:var(--yasmin);transition:all 0.15s;cursor:pointer;" onclick="selectPriority('yasmin')">💖 Yasmin</div>
+        </label>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeAddTaskModal()" style="flex:1;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Cancelar</button>
+      <button onclick="confirmAddTask()" style="flex:2;padding:12px;background:var(--accent);border:none;border-radius:10px;color:#0a0a0f;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='#ffc04a'" onmouseout="this.style.background='var(--accent)'">Agregar Tarea →</button>
+    </div>
+  </div>
 </div>
-</body>
+
+</div><!-- /app-content -->
 </html>
