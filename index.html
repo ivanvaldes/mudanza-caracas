@@ -1621,15 +1621,20 @@ function saveCustomTasks() {
 }
 
 function renderCustomTask(task) {
-  // Find the task-list inside the phase-card that matches this group
-  // Custom tasks are appended to the LAST task-list of their group
-  const lists = document.querySelectorAll(`.task-item[data-group="${task.group}"]`);
-  if (!lists.length) return;
-  // Find parent task-list of last matching item
-  const lastItem = lists[lists.length - 1];
-  const taskList = lastItem.closest('.task-list');
+  if (document.querySelector(`[data-custom-id="${task.id}"]`)) return;
+
+  // Find the exact phase-card by stored cardIndex
+  let taskList = null;
+  if (task.cardIndex !== undefined && task.cardIndex !== null) {
+    const card = document.querySelector(`.phase-card[data-card-index="${task.cardIndex}"]`);
+    if (card) taskList = card.querySelector('.task-list');
+  }
+  // Fallback: first task-list of the group
+  if (!taskList) {
+    const firstItem = document.querySelector(`.task-item[data-group="${task.group}"]`);
+    if (firstItem) taskList = firstItem.closest('.task-list');
+  }
   if (!taskList) return;
-  if (document.querySelector(`[data-custom-id="${task.id}"]`)) return; // already rendered
 
   const div = document.createElement('div');
   div.className = 'task-item custom-task' + (task.done ? ' done' : '');
@@ -1649,6 +1654,8 @@ function renderCustomTask(task) {
     deleteCustomTask(task.id);
   });
   taskList.appendChild(div);
+  // Update all progress counters immediately after inserting into DOM
+  updateProgress();
 }
 
 function deleteCustomTask(id) {
@@ -1660,10 +1667,13 @@ function deleteCustomTask(id) {
 }
 
 // ---- Add task modal ----
-function openAddTaskModal(group) {
+function openAddTaskModal(group, cardIndex) {
   document.getElementById('modal-group').value = group;
+  document.getElementById('modal-card-index').value = cardIndex ?? '';
   document.getElementById('modal-text').value = '';
   document.getElementById('modal-priority').value = 'media';
+  // Reset priority buttons to default (media)
+  selectPriority('media');
   document.getElementById('add-task-modal').style.display = 'flex';
   setTimeout(() => document.getElementById('modal-text').focus(), 100);
 }
@@ -1686,22 +1696,26 @@ function selectPriority(val) {
 
 async function confirmAddTask() {
   const group = document.getElementById('modal-group').value;
+  const cardIndex = document.getElementById('modal-card-index').value;
   const text = document.getElementById('modal-text').value.trim();
   const priority = document.getElementById('modal-priority').value;
   if (!text) { document.getElementById('modal-text').focus(); return; }
 
   const task = {
     id: 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
-    group, text, priority, done: false
+    group,
+    cardIndex: cardIndex !== '' ? parseInt(cardIndex) : null,
+    text,
+    priority,
+    done: false
   };
   customTasks.push(task);
-  renderCustomTask(task);
+  renderCustomTask(task);  // renders + calls updateProgress
   closeAddTaskModal();
   setSyncStatus('saving');
   try {
     await saveCustomTasks();
     setSyncStatus('saved');
-    updateProgress();
   } catch(e) { setSyncStatus('error'); }
 }
 
@@ -1743,19 +1757,19 @@ async function saveTasks() {
   }
 }
 
-// Inject "Add task" button into every phase-card
+// Inject "Add task" button into every phase-card and tag with index
 function injectAddButtons() {
-  document.querySelectorAll('.phase-card').forEach(card => {
+  document.querySelectorAll('.phase-card').forEach((card, cardIndex) => {
     const taskList = card.querySelector('.task-list');
     if (!taskList) return;
-    // Get group from first task item
     const firstTask = card.querySelector('.task-item[data-group]');
     if (!firstTask) return;
     const group = firstTask.dataset.group;
+    card.dataset.cardIndex = cardIndex;
     const btn = document.createElement('button');
     btn.className = 'add-task-btn';
     btn.innerHTML = '＋ Agregar tarea';
-    btn.addEventListener('click', () => openAddTaskModal(group));
+    btn.addEventListener('click', () => openAddTaskModal(group, cardIndex));
     card.appendChild(btn);
   });
 }
@@ -2018,6 +2032,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;">➕ Nueva Tarea</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:24px;">Se sincroniza con Yasmin en tiempo real</div>
     <input type="hidden" id="modal-group" />
+    <input type="hidden" id="modal-card-index" />
     <textarea id="modal-text" placeholder="Describe la tarea..." rows="3"
       style="width:100%;padding:12px 14px;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;outline:none;margin-bottom:14px;transition:border-color 0.2s;"
       onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
