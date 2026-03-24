@@ -132,28 +132,31 @@
     text-transform: uppercase;
   }
 
-  /* TABS */
+  /* TABS — scrollable on mobile, pill style */
   .tabs {
     display: flex;
-    gap: 4px;
-    padding: 16px 40px;
+    gap: 6px;
+    padding: 12px 16px;
     background: var(--bg2);
     border-bottom: 1px solid var(--border);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .tabs::-webkit-scrollbar { display: none; }
 
   .tab {
-    padding: 8px 18px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
     border: 1px solid transparent;
     cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     white-space: nowrap;
     transition: all 0.2s;
     color: var(--muted);
     background: transparent;
+    flex-shrink: 0;
   }
 
   .tab:hover { color: var(--text); border-color: var(--border); }
@@ -331,10 +334,60 @@
 
   @media (max-width: 700px) {
     .charts-row { grid-template-columns: 1fr; }
-    .main { padding: 20px 16px; }
-    .tabs { padding: 12px 16px; }
-    header { padding: 24px 16px; }
+    .main { padding: 16px; }
+    .tabs { padding: 10px 12px; }
+    header { padding: 20px 16px; }
+    .header-top { flex-direction: column; gap: 12px; }
+    .header-meta { align-items: flex-start; }
+    .month-timeline { grid-template-columns: repeat(3, 1fr); }
   }
+
+  /* SESSION BAR — visible on all screens, sticky at bottom on mobile */
+  #session-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+  }
+
+  .logout-btn {
+    padding: 5px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .logout-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* SHOW PASSWORD toggle */
+  .pwd-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    line-height: 1;
+  }
+  .pwd-toggle:hover { color: var(--text); }
+  .login-input-wrap { position: relative; }
 
   .chart-card {
     background: var(--card);
@@ -650,7 +703,8 @@
     <div class="login-title">Plan Caracas 2025</div>
     <div class="login-sub">Panamá → Caracas · Acceso privado</div>
     <div class="login-input-wrap">
-      <input class="login-input" id="pwd-input" type="password" placeholder="••••••••" maxlength="30" autocomplete="off" />
+      <input class="login-input" id="pwd-input" type="password" placeholder="••••••••" maxlength="30" autocomplete="off" style="padding-right:44px;" />
+      <button class="pwd-toggle" type="button" id="pwd-toggle-btn" onclick="togglePwdVisibility()" title="Mostrar/ocultar">👁️</button>
     </div>
     <button class="login-btn" onclick="checkPassword()">Entrar →</button>
     <div class="login-error" id="login-error"></div>
@@ -675,7 +729,6 @@
       <div class="overall-pct" id="overall-pct">0%</div>
       <div class="overall-label">Progreso Total</div>
       <div id="sync-status" style="font-size:11px;margin-top:6px;color:var(--muted);font-family:'DM Mono',monospace;">⏳ Cargando...</div>
-      <div id="session-countdown" style="font-size:11px;margin-top:2px;color:var(--muted);font-family:'DM Mono',monospace;"></div>
     </div>
   </div>
 </header>
@@ -1476,6 +1529,19 @@
   Plan de Mudanza · <span>Panamá → Caracas 2025</span> · Creado con ❤️ para que este regreso sea exitoso
 </footer>
 
+<script>
+// Shim: proxy inline onclick calls to module-exported functions
+// Module assigns window._mudanza after load; these wrappers wait for it.
+function showPanel(n)         { window._mudanza ? window._mudanza.showPanel(n)         : window.showPanel._q = (window.showPanel._q||[]).concat([['showPanel',n]]); }
+function toggleTask(el)       { window._mudanza ? window._mudanza.toggleTask(el)       : null; }
+function checkPassword()      { window._mudanza ? window._mudanza.checkPassword()      : null; }
+function openAddTaskModal(g)  { window._mudanza ? window._mudanza.openAddTaskModal(g)  : null; }
+function closeAddTaskModal()  { window._mudanza ? window._mudanza.closeAddTaskModal()  : null; }
+function confirmAddTask()     { window._mudanza ? window._mudanza.confirmAddTask()     : null; }
+function selectPriority(v)    { window._mudanza ? window._mudanza.selectPriority(v)    : null; }
+function togglePwdVisibility(){ window._mudanza ? window._mudanza.togglePwdVisibility(): null; }
+function logout()             { window._mudanza ? window._mudanza.logout()             : null; }
+</script>
 <script type="module">
 // ======= FIREBASE =======
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -1604,6 +1670,18 @@ function openAddTaskModal(group) {
 
 function closeAddTaskModal() {
   document.getElementById('add-task-modal').style.display = 'none';
+}
+
+function selectPriority(val) {
+  document.getElementById('modal-priority').value = val;
+  const colors = { alta: 'var(--accent2)', media: 'var(--accent)', baja: 'var(--green)', yasmin: 'var(--yasmin)' };
+  const bgs   = { alta: '232,86,58', media: '245,166,35', baja: '46,204,113', yasmin: '232,124,160' };
+  document.querySelectorAll('.pri-btn').forEach(b => {
+    const active = b.dataset.val === val;
+    b.style.borderColor = active ? colors[b.dataset.val] : 'var(--border)';
+    b.style.background  = active ? `rgba(${bgs[b.dataset.val]},0.12)` : 'transparent';
+    b.style.color = colors[b.dataset.val];
+  });
 }
 
 async function confirmAddTask() {
@@ -1824,6 +1902,7 @@ function showApp() {
   setTimeout(() => {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-content').style.display = 'block';
+    document.getElementById('session-bar').style.display = 'flex';
     updateProgress();
     setTimeout(updateProgress, 200);
     startLogoutTimer(SESSION_MINUTES * 60 * 1000);
@@ -1836,8 +1915,9 @@ function logout() {
   sessionStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(SESSION_TS_KEY);
   const cd = document.getElementById('session-countdown');
-  if (cd) cd.textContent = '';
+  if (cd) cd.textContent = '🔒 Sesión activa';
   document.getElementById('app-content').style.display = 'none';
+  document.getElementById('session-bar').style.display = 'none';
   const ls = document.getElementById('login-screen');
   ls.style.display = 'flex';
   ls.style.opacity = '1';
@@ -1896,22 +1976,19 @@ document.getElementById('pwd-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkPassword();
 });
 
-// Expose to window for inline onclick handlers
-window.toggleTask = toggleTask;
-window.showPanel = showPanel;
-window.checkPassword = checkPassword;
-window.openAddTaskModal = openAddTaskModal;
-window.closeAddTaskModal = closeAddTaskModal;
-window.confirmAddTask = confirmAddTask;
-window.selectPriority = function(val) {
-  document.getElementById('modal-priority').value = val;
-  document.querySelectorAll('.pri-btn').forEach(b => {
-    const isActive = b.dataset.val === val;
-    const colors = { alta: 'var(--accent2)', media: 'var(--accent)', baja: 'var(--green)', yasmin: 'var(--yasmin)' };
-    b.style.borderColor = isActive ? colors[val] : 'var(--border)';
-    b.style.background = isActive ? `rgba(${val==='alta'?'232,86,58':val==='media'?'245,166,35':val==='baja'?'46,204,113':'232,124,160'},0.1)` : 'transparent';
-    b.style.color = colors[b.dataset.val];
-  });
+// ---- Show/hide password ----
+function togglePwdVisibility() {
+  const inp = document.getElementById('pwd-input');
+  const btn = document.getElementById('pwd-toggle-btn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁️'; }
+}
+
+// Expose all functions via _mudanza namespace (avoids module scope issues)
+window._mudanza = {
+  showPanel, toggleTask, checkPassword,
+  openAddTaskModal, closeAddTaskModal, confirmAddTask, selectPriority,
+  togglePwdVisibility, logout
 };
 
 // Check existing session on load
@@ -1922,12 +1999,19 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   if (elapsed < totalMs) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-content').style.display = 'block';
+    document.getElementById('session-bar').style.display = 'flex';
     startLogoutTimer(totalMs - elapsed);
   } else {
     sessionStorage.removeItem(SESSION_KEY);
   }
 }
 </script>
+<!-- SESSION BAR -->
+<div id="session-bar" style="display:none;align-items:center;justify-content:space-between;padding:8px 20px;background:var(--bg2);border-top:1px solid var(--border);font-size:12px;font-family:'DM Mono',monospace;position:sticky;bottom:0;z-index:100;">
+  <div id="session-countdown" style="color:var(--muted);">🔒 Sesión activa</div>
+  <button class="logout-btn" onclick="logout()">⏏ Cerrar sesión</button>
+</div>
+
 <!-- ADD TASK MODAL -->
 <div id="add-task-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
   <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:440px;margin:16px;animation:fadeIn 0.25s ease;">
