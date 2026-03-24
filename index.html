@@ -636,6 +636,7 @@
       <div class="overall-pct" id="overall-pct">0%</div>
       <div class="overall-label">Progreso Total</div>
       <div id="sync-status" style="font-size:11px;margin-top:6px;color:var(--muted);font-family:'DM Mono',monospace;">⏳ Cargando...</div>
+      <div id="session-countdown" style="font-size:11px;margin-top:2px;color:var(--muted);font-family:'DM Mono',monospace;"></div>
     </div>
   </div>
 </header>
@@ -1652,25 +1653,79 @@ startFirebaseSync();
 // Animate bars on load
 setTimeout(updateProgress, 200);
 
-// ======= PASSWORD =======
+// ======= PASSWORD + AUTO-LOGOUT 15 MIN =======
 const PASSWORD = 'whisky2025';
 const SESSION_KEY = 'mudanza_auth';
+const SESSION_TS_KEY = 'mudanza_auth_ts';
+const SESSION_MINUTES = 15;
+let logoutTimer = null;
+let countdownInterval = null;
+
+function showApp() {
+  document.getElementById('login-screen').style.opacity = '0';
+  document.getElementById('login-screen').style.transition = 'opacity 0.4s';
+  setTimeout(() => {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-content').style.display = 'block';
+    updateProgress();
+    setTimeout(updateProgress, 200);
+    startLogoutTimer(SESSION_MINUTES * 60 * 1000);
+  }, 400);
+}
+
+function logout() {
+  clearTimeout(logoutTimer);
+  clearInterval(countdownInterval);
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(SESSION_TS_KEY);
+  const cd = document.getElementById('session-countdown');
+  if (cd) cd.textContent = '';
+  document.getElementById('app-content').style.display = 'none';
+  const ls = document.getElementById('login-screen');
+  ls.style.display = 'flex';
+  ls.style.opacity = '1';
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('login-error').textContent = '⏱️ Sesión expirada. Ingresa el password de nuevo.';
+  setTimeout(() => { document.getElementById('login-error').textContent = ''; }, 4000);
+}
+
+function startLogoutTimer(ms) {
+  clearTimeout(logoutTimer);
+  clearInterval(countdownInterval);
+  sessionStorage.setItem(SESSION_TS_KEY, Date.now());
+  logoutTimer = setTimeout(logout, ms);
+
+  // Countdown display
+  let remaining = Math.round(ms / 1000);
+  const cd = document.getElementById('session-countdown');
+  countdownInterval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) { clearInterval(countdownInterval); return; }
+    const m = Math.floor(remaining / 60);
+    const s = String(remaining % 60).padStart(2, '0');
+    if (cd) {
+      cd.textContent = `🔒 ${m}:${s}`;
+      cd.style.color = remaining <= 60 ? 'var(--accent2)' : 'var(--muted)';
+    }
+  }, 1000);
+
+  // Reset timer on user activity
+  const resetTimer = () => {
+    if (sessionStorage.getItem(SESSION_KEY) !== '1') return;
+    startLogoutTimer(SESSION_MINUTES * 60 * 1000);
+  };
+  ['click', 'keydown', 'touchstart'].forEach(ev =>
+    document.addEventListener(ev, resetTimer, { once: true, passive: true })
+  );
+}
 
 function checkPassword() {
   const val = document.getElementById('pwd-input').value;
   const errEl = document.getElementById('login-error');
   const input = document.getElementById('pwd-input');
-
   if (val === PASSWORD) {
     sessionStorage.setItem(SESSION_KEY, '1');
-    document.getElementById('login-screen').style.opacity = '0';
-    document.getElementById('login-screen').style.transition = 'opacity 0.4s';
-    setTimeout(() => {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app-content').style.display = 'block';
-      updateProgress();
-      setTimeout(updateProgress, 200);
-    }, 400);
+    showApp();
   } else {
     errEl.textContent = 'Contraseña incorrecta. Intenta de nuevo.';
     input.classList.add('error');
@@ -1689,10 +1744,18 @@ window.toggleTask = toggleTask;
 window.showPanel = showPanel;
 window.checkPassword = checkPassword;
 
-// Check session
+// Check existing session on load
 if (sessionStorage.getItem(SESSION_KEY) === '1') {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app-content').style.display = 'block';
+  const ts = parseInt(sessionStorage.getItem(SESSION_TS_KEY) || '0');
+  const elapsed = Date.now() - ts;
+  const totalMs = SESSION_MINUTES * 60 * 1000;
+  if (elapsed < totalMs) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-content').style.display = 'block';
+    startLogoutTimer(totalMs - elapsed);
+  } else {
+    sessionStorage.removeItem(SESSION_KEY);
+  }
 }
 </script>
 </div>
