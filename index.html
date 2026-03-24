@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de Mudanza · Caracas 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --card: #161620;
+    --border: #2a2a38;
+    --accent: #f5a623;
+    --accent2: #e8563a;
+    --green: #2ecc71;
+    --blue: #4a9eff;
+    --purple: #a855f7;
+    --text: #f0ede8;
+    --muted: #7a7a8a;
+    --yasmin: #e87ca0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a0e05 50%, #0f0a1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 40px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(245,166,35,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .route-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .route-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 60px);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent) 0%, #fff5e0 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .progress-ring-wrap {
+    text-align: center;
+  }
+
+  .overall-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .overall-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 16px 40px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s;
+    color: var(--muted);
+    background: transparent;
+  }
+
+  .tab:hover { color: var(--text); border-color: var(--border); }
+  .tab.active { background: var(--card); color: var(--text); border-color: var(--border); }
+  .tab.active.career { border-color: var(--blue); color: var(--blue); }
+  .tab.active.housing { border-color: var(--green); color: var(--green); }
+  .tab.active.assets { border-color: var(--accent); color: var(--accent); }
+  .tab.active.dog { border-color: #f9a8d4; color: #f9a8d4; }
+  .tab.active.biz { border-color: var(--purple); color: var(--purple); }
+  .tab.active.yasmin { border-color: var(--yasmin); color: var(--yasmin); }
+
+  /* MAIN CONTENT */
+  .main {
+    padding: 30px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* SECTION PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* SUMMARY DASHBOARD */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .kpi.career::before { background: var(--blue); }
+  .kpi.housing::before { background: var(--green); }
+  .kpi.assets::before { background: var(--accent); }
+  .kpi.dog::before { background: #f9a8d4; }
+  .kpi.biz::before { background: var(--purple); }
+  .kpi.yasmin::before { background: var(--yasmin); }
+
+  .kpi-icon { font-size: 24px; margin-bottom: 10px; }
+  .kpi-val { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; }
+  .kpi-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .kpi-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .kpi-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+  /* TIMELINE */
+  .timeline-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .section-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .phase-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    position: relative;
+  }
+
+  .phase-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .phase-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .phase-range { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+
+  .phase-progress-bar {
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  /* TASKS */
+  .task-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .task-item:hover { border-color: var(--border); }
+  .task-item.done { opacity: 0.6; }
+  .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
+
+  .task-check {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    font-size: 11px;
+  }
+
+  .task-item.done .task-check { background: var(--green); border-color: var(--green); color: white; }
+
+  .task-text { font-size: 13px; line-height: 1.5; flex: 1; }
+
+  .task-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .tag-alta { background: rgba(232,86,58,0.2); color: var(--accent2); }
+  .tag-media { background: rgba(245,166,35,0.2); color: var(--accent); }
+  .tag-baja { background: rgba(46,204,113,0.2); color: var(--green); }
+  .tag-yasmin { background: rgba(232,124,160,0.2); color: var(--yasmin); }
+
+  /* CHARTS */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 700px) {
+    .charts-row { grid-template-columns: 1fr; }
+    .main { padding: 20px 16px; }
+    .tabs { padding: 12px 16px; }
+    header { padding: 24px 16px; }
+  }
+
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .chart-title { font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* BAR CHART */
+  .bar-chart { display: flex; flex-direction: column; gap: 12px; }
+
+  .bar-row { display: flex; flex-direction: column; gap: 4px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 12px; }
+  .bar-label span:last-child { color: var(--muted); font-family: 'DM Mono', monospace; }
+  .bar-track { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+  /* DONUT CHART */
+  .donut-wrap { display: flex; align-items: center; gap: 24px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-val { margin-left: auto; font-family: 'DM Mono', monospace; color: var(--muted); font-size: 11px; }
+
+  svg.donut { transform: rotate(-90deg); }
+
+  /* MONTH TIMELINE */
+  .month-timeline {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    margin-bottom: 30px;
+  }
+
+  .month-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .month-block:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .month-block.current { border-color: var(--accent); }
+  .month-block.current::before { content: 'HOY'; position: absolute; top: 4px; right: 4px; font-size: 8px; background: var(--accent); color: black; padding: 1px 4px; border-radius: 2px; font-weight: 700; letter-spacing: 1px; }
+
+  .month-name { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .month-tasks { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .month-sub { font-size: 10px; color: var(--muted); }
+
+  .month-mini-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+
+  /* YASMIN SECTION */
+  .yasmin-hero {
+    background: linear-gradient(135deg, rgba(232,124,160,0.1) 0%, rgba(168,85,247,0.05) 100%);
+    border: 1px solid rgba(232,124,160,0.3);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .yasmin-avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--yasmin), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .yasmin-intro h3 { font-size: 18px; font-weight: 600; color: var(--yasmin); margin-bottom: 4px; }
+  .yasmin-intro p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* NOTES */
+  .note-card {
+    background: rgba(245,166,35,0.05);
+    border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 16px;
+  }
+
+  .note-card strong { color: var(--accent); }
+
+  /* WHISKY CARD */
+  .dog-hero {
+    background: linear-gradient(135deg, rgba(249,168,212,0.08) 0%, rgba(254,215,170,0.05) 100%);
+    border: 1px solid rgba(249,168,212,0.25);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .dog-icon { font-size: 48px; }
+  .dog-intro h3 { font-size: 18px; font-weight: 600; color: #f9a8d4; margin-bottom: 4px; }
+  .dog-intro p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    letter-spacing: 1px;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* ANIMACIONES ENTRADA */
+  .fade-in {
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ===== LOGIN SCREEN ===== */
+  #login-screen {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0f;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  #login-screen::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(245,166,35,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .login-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .login-emoji { font-size: 48px; margin-bottom: 16px; }
+
+  .login-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #fff5e0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .login-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .login-input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--bg3);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .login-input:focus { border-color: var(--accent); }
+  .login-input.error { border-color: var(--accent2); animation: shake 0.4s ease; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .login-btn:hover { background: #ffc04a; transform: translateY(-1px); }
+  .login-btn:active { transform: translateY(0); }
+
+  .login-error {
+    font-size: 12px;
+    color: var(--accent2);
+    margin-top: 12px;
+    height: 16px;
+    transition: opacity 0.2s;
+  }
+
+  .login-footer {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 28px;
+    letter-spacing: 0.5px;
+  }
+
+  #app-content { display: none; }
+
+  .highlight { color: var(--accent); font-weight: 600; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-emoji">🏡</div>
+    <div class="login-title">Plan Caracas 2025</div>
+    <div class="login-sub">Panamá → Caracas · Acceso privado</div>
+    <div class="login-input-wrap">
+      <input class="login-input" id="pwd-input" type="password" placeholder="••••••••" maxlength="30" autocomplete="off" />
+    </div>
+    <button class="login-btn" onclick="checkPassword()">Entrar →</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-footer">Solo para uso de la familia 🐾</div>
+  </div>
+</div>
+
+<!-- APP CONTENT -->
+<div id="app-content">
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="route-badge">
+        <div class="route-dot"></div>
+        Panamá → Caracas · Plan 6 Meses
+      </div>
+      <h1>Tu Mudanza a Caracas</h1>
+      <p class="subtitle">Plan de transición organizado · Iniciado Marzo 2025 · Target: Septiembre 2025</p>
+    </div>
+    <div class="progress-ring-wrap">
+      <div class="overall-pct" id="overall-pct">0%</div>
+      <div class="overall-label">Progreso Total</div>
+      <div id="sync-status" style="font-size:11px;margin-top:6px;color:var(--muted);font-family:'DM Mono',monospace;">⏳ Cargando...</div>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="showPanel('dashboard')">📊 Dashboard</div>
+  <div class="tab career" onclick="showPanel('career')">💼 Carrera & CTO</div>
+  <div class="tab housing" onclick="showPanel('housing')">🏠 Vivienda</div>
+  <div class="tab assets" onclick="showPanel('assets')">📦 Activos Panamá</div>
+  <div class="tab dog" onclick="showPanel('dog')">🐾 Whisky</div>
+  <div class="tab biz" onclick="showPanel('biz')">🚀 Emprendimiento</div>
+  <div class="tab yasmin" onclick="showPanel('yasmin')">💖 Yasmin</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <div class="panel active fade-in" id="panel-dashboard">
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi career">
+        <div class="kpi-icon">💼</div>
+        <div class="kpi-val" id="kpi-career">0%</div>
+        <div class="kpi-label">Carrera & CV</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-career" style="width:0%;background:var(--blue)"></div></div>
+      </div>
+      <div class="kpi housing">
+        <div class="kpi-icon">🏠</div>
+        <div class="kpi-val" id="kpi-housing">0%</div>
+        <div class="kpi-label">Vivienda</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-housing" style="width:0%;background:var(--green)"></div></div>
+      </div>
+      <div class="kpi assets">
+        <div class="kpi-icon">📦</div>
+        <div class="kpi-val" id="kpi-assets">0%</div>
+        <div class="kpi-label">Activos PMA</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-assets" style="width:0%;background:var(--accent)"></div></div>
+      </div>
+      <div class="kpi dog">
+        <div class="kpi-icon">🐾</div>
+        <div class="kpi-val" id="kpi-dog">0%</div>
+        <div class="kpi-label">Whisky</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-dog" style="width:0%;background:#f9a8d4"></div></div>
+      </div>
+      <div class="kpi biz">
+        <div class="kpi-icon">🚀</div>
+        <div class="kpi-val" id="kpi-biz">0%</div>
+        <div class="kpi-label">Emprendimiento</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-biz" style="width:0%;background:var(--purple)"></div></div>
+      </div>
+      <div class="kpi yasmin">
+        <div class="kpi-icon">💖</div>
+        <div class="kpi-val" id="kpi-yasmin">0%</div>
+        <div class="kpi-label">Yasmin</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-yasmin" style="width:0%;background:var(--yasmin)"></div></div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Progreso por Área</div>
+        <div class="bar-chart" id="progress-bars"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Distribución de Tareas</div>
+        <div class="donut-wrap">
+          <svg class="donut" width="110" height="110" viewBox="0 0 110 110" id="donut-svg">
+            <circle cx="55" cy="55" r="40" fill="none" stroke="#1a1a24" stroke-width="18"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--blue)" stroke-width="18" stroke-dasharray="0 251.3" id="d1"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--green)" stroke-width="18" stroke-dasharray="0 251.3" stroke-dashoffset="0" id="d2"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--accent)" stroke-width="18" stroke-dasharray="0 251.3" id="d3"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="#f9a8d4" stroke-width="18" stroke-dasharray="0 251.3" id="d4"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--purple)" stroke-width="18" stroke-dasharray="0 251.3" id="d5"/>
+            <circle cx="55" cy="55" r="40" fill="none" stroke="var(--yasmin)" stroke-width="18" stroke-dasharray="0 251.3" id="d6"/>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Carrera<span class="legend-val" id="lv1">-</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Vivienda<span class="legend-val" id="lv2">-</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Activos<span class="legend-val" id="lv3">-</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f9a8d4"></div>Whisky<span class="legend-val" id="lv4">-</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Negocio<span class="legend-val" id="lv5">-</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--yasmin)"></div>Yasmin<span class="legend-val" id="lv6">-</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTHLY TIMELINE -->
+    <div class="timeline-header">
+      <div class="section-title">Cronograma 6 Meses</div>
+      <div class="section-badge" style="background:rgba(245,166,35,0.15);color:var(--accent)">Mar → Sep 2025</div>
+    </div>
+
+    <div class="month-timeline">
+      <div class="month-block current">
+        <div class="month-name">Mar</div>
+        <div class="month-tasks" style="color:var(--blue)">5</div>
+        <div class="month-sub">Planificación</div>
+        <div class="month-mini-bar"><div style="height:100%;width:0%;background:var(--blue);border-radius:2px;transition:width 1s" id="mb1"></div></div>
+      </div>
+      <div class="month-block">
+        <div class="month-name">Abr</div>
+        <div class="month-tasks" style="color:var(--accent)">8</div>
+        <div class="month-sub">Preparación</div>
+        <div class="month-mini-bar"><div style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 1s" id="mb2"></div></div>
+      </div>
+      <div class="month-block">
+        <div class="month-name">May</div>
+        <div class="month-tasks" style="color:var(--green)">7</div>
+        <div class="month-sub">Transición</div>
+        <div class="month-mini-bar"><div style="height:100%;width:0%;background:var(--green);border-radius:2px;transition:width 1s" id="mb3"></div></div>
+      </div>
+      <div class="month-block">
+        <div class="month-name">Jun</div>
+        <div class="month-tasks" style="color:var(--purple)">6</div>
+        <div class="month-sub">Ejecución</div>
+        <div class="month-mini-bar"><div style="height:100%;width:0%;background:var(--purple);border-radius:2px;transition:width 1s" id="mb4"></div></div>
+      </div>
+      <div class="month-block">
+        <div class="month-name">Jul</div>
+        <div class="month-tasks" style="color:var(--accent2)">5</div>
+        <div class="month-sub">Cierre PMA</div>
+        <div class="month-mini-bar"><div style="height:100%;width:0%;background:var(--accent2);border-radius:2px;transition:width 1s" id="mb5"></div></div>
+      </div>
+      <div class="month-block">
+        <div class="month-name">Ago–Sep</div>
+        <div class="month-tasks" style="color:var(--yasmin)">4</div>
+        <div class="month-sub">¡Mudanza! 🎉</div>
+        <div class="month-mini-bar"><div style="height:100%;width:0%;background:var(--yasmin);border-radius:2px;transition:width 1s" id="mb6"></div></div>
+      </div>
+    </div>
+
+    <div class="note-card">
+      💡 <strong>Tip:</strong> Haz click en las checkboxes de cada sección para marcar avances. El progreso se guarda automáticamente en tu navegador. Comparte este archivo con <strong>Yasmin</strong> para que ella también pueda ver y marcar sus tareas.
+    </div>
+  </div>
+
+  <!-- ==================== CARRERA ==================== -->
+  <div class="panel fade-in" id="panel-career">
+    <div class="timeline-header">
+      <div class="section-title" style="color:var(--blue)">💼 Carrera & Perfil CTO</div>
+      <div class="section-badge" style="background:rgba(74,158,255,0.15);color:var(--blue)">MÁXIMA PRIORIDAD</div>
+    </div>
+
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="phase-num">Fase 1 · Marzo 2025</div>
+        <div class="phase-title">CV & LinkedIn CTO-Ready</div>
+        <div class="phase-range">Semanas 1–3</div>
+        <div class="phase-progress-bar"><div id="pp-c1" style="height:100%;width:0%;background:var(--blue);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Reescribir CV enfocado en liderazgo técnico (CTO / Head of Engineering). Highlight: Smartmatic, Jomi, años de experiencia, equipos liderados.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Actualizar LinkedIn: headline "Software Engineering Manager | CTO aspirant | 10+ yrs", agregar logros cuantificables en Smartmatic.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Preparar sección "Featured" en LinkedIn con proyectos destacados, artículos o demos de sistemas que hayas construido.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Agregar skills técnicos y blandos relevantes a CTO: System Architecture, Team Leadership, Agile, Product Roadmap, Budget Management.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Solicitar 3–5 recomendaciones en LinkedIn de colegas o superiores en Smartmatic antes de salir.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">Fase 2 · Abril–Mayo 2025</div>
+        <div class="phase-title">Búsqueda Activa de Trabajo</div>
+        <div class="phase-range">Semanas 4–10</div>
+        <div class="phase-progress-bar"><div id="pp-c2" style="height:100%;width:0%;background:var(--blue);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Contactar reclutadores especializados en tech Venezuela: LinkedIn, Computrabajo.com.ve, y grupos de WhatsApp/Telegram de IT Venezuela.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Activar modo "Open to Work" en LinkedIn visible para recruiters. Target: CTO, VP Engineering, Head of Tech, Engineering Manager.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Aplicar a 5 ofertas remotas/internacionales por semana: Torre.co, Remote.com, We Work Remotely, LinkedIn Jobs, AngelList.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Explorar roles remotos con empresas latinoamericanas tech: Globant, Lemon, Mercado Libre, Rappi, Kavak, Platzi.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Preparar pitch personal de 2 minutos para entrevistas: quién eres, qué logros tienes, por qué CTO. Practicar en inglés y español.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Consolidar y formalizar relación laboral con Jomi en Venezuela: definir alcance, compensación y modalidad de trabajo para cuando llegues.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Negociar salida de Smartmatic con buen finiquito/referencias. Fecha objetivo: Julio–Agosto 2025.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">Fase 3 · Junio–Agosto 2025</div>
+        <div class="phase-title">Asegurar Ingreso Estable</div>
+        <div class="phase-range">Semanas 11–24</div>
+        <div class="phase-progress-bar"><div id="pp-c3" style="height:100%;width:0%;background:var(--blue);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Meta: tener al menos 1 oferta de trabajo confirmada (remoto o Caracas) antes de renunciar a Smartmatic.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Crear perfil en Toptal o Turing para consultoría tech senior. Proceso de aplicación toma 2–4 semanas, empezar temprano.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="career" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Calcular ingreso mínimo necesario en Venezuela para mantener estilo de vida actual (en USD). Usar como filtro para ofertas.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-card">
+      🎯 <strong>Estrategia CTO:</strong> Tu perfil en Smartmatic como Software Associate Manager + 11 años de experiencia internacional es muy potente. Posiciónate como alguien que <strong>construye y escala equipos técnicos</strong>, no solo como developer. Enfoca el CV en impacto de negocio: "Lideré equipo de X personas", "Reduje tiempo de entrega en Y%", "Arquitecté sistema que procesa Z transacciones".
+    </div>
+  </div>
+
+  <!-- ==================== VIVIENDA ==================== -->
+  <div class="panel fade-in" id="panel-housing">
+    <div class="timeline-header">
+      <div class="section-title" style="color:var(--green)">🏠 Vivienda en Caracas</div>
+      <div class="section-badge" style="background:rgba(46,204,113,0.15);color:var(--green)">ALTA PRIORIDAD</div>
+    </div>
+
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="phase-num">Investigación · Abril–Mayo</div>
+        <div class="phase-title">Definir Zona & Presupuesto</div>
+        <div class="phase-range">Antes de decidir</div>
+        <div class="phase-progress-bar"><div id="pp-h1" style="height:100%;width:0%;background:var(--green);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Investigar zonas seguras y con buena calidad de vida en Caracas: Las Mercedes, El Hatillo, La Castellana, Altamira, Los Palos Grandes.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Definir presupuesto mensual para alquiler o cuota de compra en USD. Comparar con lo que pagas actualmente en Panamá.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Decidir: ¿alquilar primero 6–12 meses para conocer la ciudad, o comprar directamente? Considerar que el mercado inmobiliario en VE puede ser ventajoso.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Investigar portales inmobiliarios venezolanos: Inmuebles24.com, TuInmueble.com, MercadoLibre Venezuela Inmuebles. Guardar favoritos.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Verificar disponibilidad de servicios básicos confiables en zonas de interés: agua, luz (AES), internet (NetUno, InterNet).</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">Coordinación Yasmin · Mayo–Junio</div>
+        <div class="phase-title">Búsqueda Activa (con Yasmin)</div>
+        <div class="phase-range">Desde Caracas</div>
+        <div class="phase-progress-bar"><div id="pp-h2" style="height:100%;width:0%;background:var(--green);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: Visitar al menos 5 apartamentos en las zonas definidas. Tomar fotos y video de cada uno para comparar contigo remotamente.</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: Verificar condiciones del apartamento: estado eléctrico, agua 24h, seguridad del edificio, estacionamiento para perro-friendly.</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: Contactar inmobiliarias locales de confianza. Preguntar sobre contratos en USD y términos para mascotas (Whisky).</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Hacer videollamada juntos en cada visita para que puedas verlo en tiempo real y tomar la decisión.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">Cierre · Julio–Agosto</div>
+        <div class="phase-title">Firma y Preparación del Hogar</div>
+        <div class="phase-range">Antes de llegar</div>
+        <div class="phase-progress-bar"><div id="pp-h3" style="height:100%;width:0%;background:var(--green);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Firmar contrato de alquiler o promesa de compra. Asegurarse que el contrato permita mascotas.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: Coordinar instalación de internet de alta velocidad antes de tu llegada (esencial para trabajo remoto).</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+          <div class="task-item" data-group="housing" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: Lista de muebles/enseres básicos necesarios. Cotizar en Traki, La Cadena, o mercados locales.</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-card">
+      🏘️ <strong>Recomendación:</strong> Para trabajo remoto necesitas internet estable. Zonas como <strong>Las Mercedes, Altamira y Los Palos Grandes</strong> tienen mejor infraestructura. Considera un apartamento con planta eléctrica o en edificio con sistema UPS. Alquilar primero por 6 meses te da flexibilidad para conocer mejor la ciudad antes de comprar.
+    </div>
+  </div>
+
+  <!-- ==================== ACTIVOS ==================== -->
+  <div class="panel fade-in" id="panel-assets">
+    <div class="timeline-header">
+      <div class="section-title" style="color:var(--accent)">📦 Cerrar Activos en Panamá</div>
+      <div class="section-badge" style="background:rgba(245,166,35,0.15);color:var(--accent)">MEDIA PRIORIDAD</div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="phase-card" style="margin-bottom:20px">
+          <div class="phase-num">Apartamento · Mayo–Julio</div>
+          <div class="phase-title">🏠 Vender o Alquilar el Aparto</div>
+          <div class="phase-range">Decisión importante</div>
+          <div class="phase-progress-bar"><div id="pp-a1" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 1s"></div></div>
+          <div class="task-list">
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Evaluar si conviene más vender (liquidez inmediata) o alquilar (ingreso pasivo en USD desde VE). Consultar con asesor inmobiliario.</div>
+              <span class="task-tag tag-alta">ALTA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Si vender: poner el apartamento en venta con agencia inmobiliaria reconocida en Panamá (RE/MAX, Century 21). Precio de mercado en USD.</div>
+              <span class="task-tag tag-alta">ALTA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Si alquilar: buscar administrador de propiedad de confianza en Panamá que gestione el apartamento mientras estás en VE.</div>
+              <span class="task-tag tag-media">MEDIA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Revisar papeles del apartamento: hipoteca pendiente, impuestos al día, escritura. Consultar con abogado panameño.</div>
+              <span class="task-tag tag-alta">ALTA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Vaciar y limpiar el apartamento. Guardar/vender/donar muebles que no te lleves.</div>
+              <span class="task-tag tag-media">MEDIA</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card">
+          <div class="phase-num">Finanzas · Continuo</div>
+          <div class="phase-title">💰 Cuentas y Finanzas</div>
+          <div class="phase-range">Antes de salir</div>
+          <div class="phase-progress-bar"><div id="pp-a3" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 1s"></div></div>
+          <div class="task-list">
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Mantener cuenta bancaria en Panamá activa para recibir pagos remotos o ingreso del alquiler del aparto.</div>
+              <span class="task-tag tag-alta">ALTA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Abrir cuenta en Zelle, Binance, PayPal o similar para recibir pagos internacionales en Venezuela.</div>
+              <span class="task-tag tag-alta">ALTA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Cerrar servicios que no usarás: streaming duplicados, gimnasio, suscripciones varias.</div>
+              <span class="task-tag tag-baja">BAJA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="phase-card" style="margin-bottom:20px">
+          <div class="phase-num">Camioneta · Junio–Agosto</div>
+          <div class="phase-title">🚗 Vender la Camioneta</div>
+          <div class="phase-range">Antes de irte</div>
+          <div class="phase-progress-bar"><div id="pp-a2" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 1s"></div></div>
+          <div class="task-list">
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Investigar precio de mercado justo para la camioneta en Panamá. Usar OLX, Encuentra24 o concesionarios.</div>
+              <span class="task-tag tag-media">MEDIA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Hacer mantenimiento básico, limpiar a fondo y sacar fotos profesionales para publicar en portales de venta.</div>
+              <span class="task-tag tag-media">MEDIA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Publicar en OLX Panamá, Encuentra24, grupos de Facebook "Venta de carros Panamá". Precio en USD.</div>
+              <span class="task-tag tag-media">MEDIA</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Tramitar traspaso y documentación del vehículo con abogado o gestor vehicular panameño.</div>
+              <span class="task-tag tag-media">MEDIA</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-card">
+          <div class="phase-num">Vehículo Caracas · Baja Prioridad</div>
+          <div class="phase-title">🚙 Buscar Carro en Caracas</div>
+          <div class="phase-range">Una vez instalado</div>
+          <div class="phase-progress-bar"><div id="pp-a4" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width 1s"></div></div>
+          <div class="task-list">
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Yasmin: Investigar precios de vehículos usados en Venezuela en MercadoLibre VE y grupos de Telegram de ventas de carros.</div>
+              <span class="task-tag tag-yasmin">YASMIN</span>
+            </div>
+            <div class="task-item" data-group="assets" onclick="toggleTask(this)">
+              <div class="task-check">✓</div>
+              <div class="task-text">Usar transporte público o Yummy/Movilnet mientras no tengas carro. No es urgente el primer mes.</div>
+              <span class="task-tag tag-baja">BAJA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PERRO ==================== -->
+  <div class="panel fade-in" id="panel-dog">
+
+    <div class="dog-hero">
+      <div class="dog-icon">🐾</div>
+      <div class="dog-intro">
+        <h3>🐕 Whisky · Golden Retriever</h3>
+        <p>Tu compañero de vida se muda también. El proceso de traer una mascota a Venezuela requiere planificación anticipada de al menos 2–3 meses. Aquí está todo lo que necesitas hacer.</p>
+      </div>
+    </div>
+
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="phase-num">Documentación · Abril–Mayo</div>
+        <div class="phase-title">Papeles de Whisky</div>
+        <div class="phase-range">Empezar con 3 meses de antelación</div>
+        <div class="phase-progress-bar"><div id="pp-d1" style="height:100%;width:0%;background:#f9a8d4;border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Llevar a Whisky al veterinario en Panamá: chequeo general, vacunas al día (rabia, distemper, parvovirus obligatorias). Obtener certificado de salud.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Verificar que Whisky tiene microchip ISO 11784/11785. Si no, implantarlo en la visita al vet. Es requisito para entrada a Venezuela.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Tramitar certificado zoosanitario de exportación en MIDA (Ministerio de Desarrollo Agropecuario de Panamá). Requiere: vacunas + examen veterinario.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Contactar INSAI (Instituto Nacional de Salud Agrícola Integral de Venezuela) para conocer requisitos actualizados de importación de mascotas.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Obtener permiso de importación SENASAG / INSAI Venezuela. Esto puede tomar 4–8 semanas. Empezar lo antes posible.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">Logística del Viaje · Julio</div>
+        <div class="phase-title">El Vuelo con Whisky</div>
+        <div class="phase-range">Semana del viaje</div>
+        <div class="phase-progress-bar"><div id="pp-d2" style="height:100%;width:0%;background:#f9a8d4;border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Investigar aerolíneas que vuelan Panamá–Caracas y permiten mascotas: Copa Airlines, Avianca. Un Golden Retriever adulto viaja en bodega como "excess baggage".</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Comprar kennel/jaula de viaje aprobada por IATA del tamaño correcto para Whisky. Que pueda pararse y girar sin problemas.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Entrenar a Whisky a estar en el kennel por períodos de tiempo antes del viaje para reducir estrés.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Consultar con el vet si Whisky necesita algún medicamento para calmar el estrés del viaje (opcional, no siempre recomendado para Golden Retrievers).</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Llevar todos los documentos de Whisky en folder separado: certificado de salud, vacunas, microchip, permiso importación VE. Tener copias digitales.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">Llegada a Caracas · Agosto</div>
+        <div class="phase-title">Instalación de Whisky</div>
+        <div class="phase-range">Primera semana</div>
+        <div class="phase-progress-bar"><div id="pp-d3" style="height:100%;width:0%;background:#f9a8d4;border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: Investigar veterinarias de confianza cerca de la zona donde vivirás en Caracas. Tener el número guardado antes de llegar.</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: Comprar en Caracas anticipadamente: cama, platos, correa, juguetes, comida (Hill's, Eukanuba, o similar disponible en VE) para el primer mes de Whisky.</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+          <div class="task-item" data-group="dog" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Primera visita al vet en Caracas los primeros 3 días: chequeo post-vuelo y registro de Whisky en la clínica veterinaria local.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-card">
+      🐾 <strong>Importante para Whisky:</strong> Los Golden Retrievers son sensibles al estrés. Planifica el viaje en temporada fresca (julio–agosto idealmente en vuelo nocturno). Nunca en enero–marzo (calor extremo en bodega). Lleva su juguete favorito y algo con tu olor en el kennel para tranquilizarlo. ¡Whisky llegará bien! 🐶
+    </div>
+  </div>
+
+  <!-- ==================== EMPRENDIMIENTO ==================== -->
+  <div class="panel fade-in" id="panel-biz">
+    <div class="timeline-header">
+      <div class="section-title" style="color:var(--purple)">🚀 Tu Emprendimiento</div>
+      <div class="section-badge" style="background:rgba(168,85,247,0.15);color:var(--purple)">PLAN A LARGO PLAZO</div>
+    </div>
+
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="phase-num">Fundamentos · Abril–Mayo</div>
+        <div class="phase-title">Definir el Negocio</div>
+        <div class="phase-range">Ideas y validación</div>
+        <div class="phase-progress-bar"><div id="pp-b1" style="height:100%;width:0%;background:var(--purple);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Definir nicho: ¿Apps móviles B2B, apps para el mercado venezolano, SaaS latinoamericano, o consultoría tech para empresas? Escoger uno para empezar.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Investigar 3 problemas específicos en Venezuela que podrías resolver con tecnología. Hablar con 5–10 potenciales clientes para validar la necesidad.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Definir modelo de negocio: ¿SaaS mensual, proyecto por proyecto, licencia de app? ¿Cobro en USD o bolívares?</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Explorar si Jomi podría ser tu primer cliente o socio del emprendimiento aprovechando relación ya existente.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">MVP · Junio–Agosto</div>
+        <div class="phase-title">Construir Primer Producto</div>
+        <div class="phase-range">Mientras aún estás en PMA</div>
+        <div class="phase-progress-bar"><div id="pp-b2" style="height:100%;width:0%;background:var(--purple);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Crear repositorio en GitHub para el primer proyecto. Usar React Native para mobile (una sola base de código para iOS y Android) o Next.js para web.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Construir MVP mínimo: landing page profesional + una funcionalidad core. No necesitas app completa para empezar a vender.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Registrar dominio y nombre de empresa. Abrir cuenta de empresa (puede ser persona natural primero) para facturar.</div>
+            <span class="task-tag tag-baja">BAJA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Crear perfil en Upwork como agencia/freelancer tech. Conseguir primeros 2–3 proyectos pequeños para construir reputación y flujo de caja.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-num">Escalado · Sep 2025 en adelante</div>
+        <div class="phase-title">Crecer el Negocio</div>
+        <div class="phase-range">Ya instalado en CCS</div>
+        <div class="phase-progress-bar"><div id="pp-b3" style="height:100%;width:0%;background:var(--purple);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Unirse a comunidades tech venezolanas: SiliconVenezuela, Venezuela Tech Hub, grupos de Telegram de startups VE. Networking activo.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Explorar aceleradoras o fondos de inversión en Venezuela o para venezolanos: IESA Ventures, INCUBA, programas de startups LATAM.</div>
+            <span class="task-tag tag-baja">BAJA</span>
+          </div>
+          <div class="task-item" data-group="biz" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Yasmin: ¿Puede involucrarse en el emprendimiento? Marketing, redes sociales, gestión de clientes, o el área que más le apasione.</div>
+            <span class="task-tag tag-yasmin">YASMIN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-card">
+      💡 <strong>Stack recomendado para tu emprendimiento:</strong> React Native + Node.js/NestJS + PostgreSQL para apps móviles. Next.js + Tailwind + Supabase para webs rápidas. Despliega en Vercel o Railway. Para pagos en Venezuela: Pagomóvil API, Zelle, o crypto (USDT). Tu experiencia en Smartmatic con sistemas de escala es tu mayor diferenciador frente a otros devs.
+    </div>
+  </div>
+
+  <!-- ==================== YASMIN ==================== -->
+  <div class="panel fade-in" id="panel-yasmin">
+
+    <div class="yasmin-hero">
+      <div class="yasmin-avatar">💖</div>
+      <div class="yasmin-intro">
+        <h3>Hola Yasmin 👋</h3>
+        <p>Este es tu rol especial en el plan de mudanza. Mientras tu novio cierra sus cosas en Panamá, tú eres sus ojos y manos en Caracas. Cada tarea marcada aquí cuenta para el progreso total del plan. ¡Gracias por ser parte de este gran paso! 🇻🇪</p>
+      </div>
+    </div>
+
+    <div class="phase-grid">
+      <div class="phase-card" style="border-color:rgba(232,124,160,0.3)">
+        <div class="phase-num">Vivienda · Abril–Junio</div>
+        <div class="phase-title" style="color:var(--yasmin)">🏠 Búsqueda del Apartamento</div>
+        <div class="phase-range">Tu misión más importante</div>
+        <div class="phase-progress-bar"><div id="pp-y1" style="height:100%;width:0%;background:var(--yasmin);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Buscar en portales (Inmuebles24, TuInmueble, MercadoLibre VE) apartamentos en Las Mercedes, Altamira, Los Palos Grandes o El Hatillo. Hacer lista de candidatos.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Visitar al menos 5 apartamentos. Hacer video completo de cada visita: entrada, sala, cuartos, cocina, baños, estacionamiento, área del edificio.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Preguntar en cada visita: ¿Aceptan mascotas? ¿Hay agua 24h? ¿Planta eléctrica? ¿Servicio de internet disponible? ¿Contrato en USD?</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Hacer videollamada durante cada visita para que él pueda verlo en tiempo real y hacer preguntas al dueño o agente.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Una vez decidido el apartamento: coordinar firma de contrato, entrega de depósito y primero en nombre de él si es necesario.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card" style="border-color:rgba(232,124,160,0.3)">
+        <div class="phase-num">Preparación del Hogar · Julio</div>
+        <div class="phase-title" style="color:var(--yasmin)">🛋️ Preparar el Nido</div>
+        <div class="phase-range">Antes de que llegue</div>
+        <div class="phase-progress-bar"><div id="pp-y2" style="height:100%;width:0%;background:var(--yasmin);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Coordinar instalación de internet de alta velocidad (NetUno, Inter o el disponible en la zona). Esencial para su trabajo remoto desde el día 1.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Lista de compras básicas para el apartamento: lo esencial para que sea funcional desde que llegue. Cocina, cama, baño.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Comprar suministros básicos para Whisky: cama, platos de agua y comida, correa, juguetes. Buscar comida Hill's Science Diet o Eukanuba disponible en VE.</div>
+            <span class="task-tag tag-alta">ALTA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Averiguar mejor clínica veterinaria cercana al apartamento para Whisky. Guardar número de emergencias veterinarias 24h.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card" style="border-color:rgba(232,124,160,0.3)">
+        <div class="phase-num">Logística · Continuo</div>
+        <div class="phase-title" style="color:var(--yasmin)">📋 Gestiones y Coordinaciones</div>
+        <div class="phase-range">Tu apoyo diario</div>
+        <div class="phase-progress-bar"><div id="pp-y3" style="height:100%;width:0%;background:var(--yasmin);border-radius:2px;transition:width 1s"></div></div>
+        <div class="task-list">
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Investigar precios de vehículos usados confiables en Caracas (Toyota, Chevrolet) en MercadoLibre y grupos de Telegram. Guardar opciones para cuando llegue.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Averiguar supermercados, farmacias, y servicios cercanos al apartamento elegido. Hacer un pequeño mapa de la zona.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Estar en contacto con Jomi (su trabajo en Venezuela) para preparar la transición de trabajo y lo que necesiten desde Caracas.</div>
+            <span class="task-tag tag-media">MEDIA</span>
+          </div>
+          <div class="task-item" data-group="yasmin" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">Ayudar a explorar la comunidad tech local: eventos, meetups, coworkings en Caracas donde pueda hacer networking al llegar.</div>
+            <span class="task-tag tag-baja">BAJA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-card" style="border-color:rgba(232,124,160,0.3);background:rgba(232,124,160,0.04)">
+      💖 <strong>Yasmin:</strong> Cada vez que marques una tarea completada aquí, el dashboard general se actualiza y tu novio puede ver el progreso desde Panamá. Juntos están construyendo el camino para que este regreso sea exitoso y ordenado. ¡Gracias por tu apoyo en esta transición tan importante! 🏡🐾
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Plan de Mudanza · <span>Panamá → Caracas 2025</span> · Creado con ❤️ para que este regreso sea exitoso
+</footer>
+
+<script type="module">
+// ======= FIREBASE =======
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjCUqsvNShbVc1XqRm21l6NWbnO-xv3bc",
+  authDomain: "mudanza-caracas.firebaseapp.com",
+  projectId: "mudanza-caracas",
+  storageBucket: "mudanza-caracas.firebasestorage.app",
+  messagingSenderId: "516683940715",
+  appId: "1:516683940715:web:86354b4d2594467e2a422e"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const DOC_REF = doc(db, 'plan', 'tasks');
+
+// Sync status indicator
+function setSyncStatus(status) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  const map = {
+    loading: { text: '⏳ Cargando...', color: 'var(--muted)' },
+    saved:   { text: '✅ Sincronizado', color: 'var(--green)' },
+    saving:  { text: '🔄 Guardando...', color: 'var(--accent)' },
+    error:   { text: '❌ Sin conexión', color: 'var(--accent2)' },
+  };
+  const s = map[status] || map.saved;
+  el.textContent = s.text;
+  el.style.color = s.color;
+}
+
+// Assign IDs to all tasks
+let taskId = 0;
+document.querySelectorAll('.task-item').forEach(t => {
+  t.dataset.id = 'task_' + (taskId++);
+});
+
+let remoteDone = [];
+
+// Apply state from Firebase to DOM
+function applyState(doneIds) {
+  remoteDone = doneIds || [];
+  document.querySelectorAll('.task-item').forEach(t => {
+    if (remoteDone.includes(t.dataset.id)) {
+      t.classList.add('done');
+    } else {
+      t.classList.remove('done');
+    }
+  });
+  updateProgress();
+}
+
+// Listen for real-time changes from Firebase
+function startFirebaseSync() {
+  setSyncStatus('loading');
+  onSnapshot(DOC_REF, (snap) => {
+    if (snap.exists()) {
+      applyState(snap.data().done || []);
+    } else {
+      applyState([]);
+    }
+    setSyncStatus('saved');
+  }, (err) => {
+    console.error('Firebase error:', err);
+    setSyncStatus('error');
+  });
+}
+
+// Save to Firebase
+async function saveTasks() {
+  setSyncStatus('saving');
+  const done = [];
+  document.querySelectorAll('.task-item.done').forEach(t => done.push(t.dataset.id));
+  try {
+    await setDoc(DOC_REF, { done, updatedAt: new Date().toISOString() });
+    setSyncStatus('saved');
+  } catch(e) {
+    console.error(e);
+    setSyncStatus('error');
+  }
+}
+
+function toggleTask(el) {
+  el.classList.toggle('done');
+  saveTasks();
+  updateProgress();
+}
+
+function getGroupProgress(group) {
+  const tasks = document.querySelectorAll(`.task-item[data-group="${group}"]`);
+  const done = document.querySelectorAll(`.task-item[data-group="${group}"].done`);
+  return { total: tasks.length, done: done.length, pct: tasks.length ? Math.round((done.length / tasks.length) * 100) : 0 };
+}
+
+function updateProgress() {
+  const groups = [
+    { id: 'career', color: 'var(--blue)', label: 'Carrera' },
+    { id: 'housing', color: 'var(--green)', label: 'Vivienda' },
+    { id: 'assets', color: 'var(--accent)', label: 'Activos' },
+    { id: 'dog', color: '#f9a8d4', label: 'Whisky' },
+    { id: 'biz', color: 'var(--purple)', label: 'Negocio' },
+    { id: 'yasmin', color: 'var(--yasmin)', label: 'Yasmin' },
+  ];
+
+  const allTasks = document.querySelectorAll('.task-item');
+  const allDone = document.querySelectorAll('.task-item.done');
+  const overallPct = allTasks.length ? Math.round((allDone.length / allTasks.length) * 100) : 0;
+  document.getElementById('overall-pct').textContent = overallPct + '%';
+
+  // KPI cards
+  const kpiEls = ['career','housing','assets','dog','biz','yasmin'];
+  const donutColors = ['var(--blue)','var(--green)','var(--accent)','#f9a8d4','var(--purple)','var(--yasmin)'];
+
+  // Progress bars chart
+  const barHtml = groups.map(g => {
+    const p = getGroupProgress(g.id);
+    return `<div class="bar-row">
+      <div class="bar-label"><span>${g.label}</span><span>${p.done}/${p.total} · ${p.pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${p.pct}%;background:${g.color}"></div></div>
+    </div>`;
+  }).join('');
+  document.getElementById('progress-bars').innerHTML = barHtml;
+
+  // KPI numbers + bars
+  groups.forEach((g, i) => {
+    const p = getGroupProgress(g.id);
+    const kpiEl = document.getElementById('kpi-' + g.id);
+    const barEl = document.getElementById('bar-' + g.id);
+    if (kpiEl) kpiEl.textContent = p.pct + '%';
+    if (barEl) barEl.style.width = p.pct + '%';
+
+    // Legend
+    const lv = document.getElementById('lv' + (i + 1));
+    if (lv) lv.textContent = p.done + '/' + p.total;
+  });
+
+  // Donut
+  const circ = 251.3;
+  let offset = 0;
+  groups.forEach((g, i) => {
+    const p = getGroupProgress(g.id);
+    const allTotal = allTasks.length;
+    const slice = allTotal ? (p.total / allTotal) * circ : 0;
+    const filled = (p.pct / 100) * slice;
+    const el = document.getElementById('d' + (i + 1));
+    if (el) {
+      el.setAttribute('stroke-dasharray', filled + ' ' + (circ - filled));
+      el.setAttribute('stroke-dashoffset', -offset);
+      offset += slice;
+    }
+  });
+
+  // Phase progress (rough estimate per phase card)
+  updatePhaseProgress();
+}
+
+function updatePhaseProgress() {
+  // Map phase progress bars to task groups roughly
+  const phases = {
+    'pp-c1': ['career'], 'pp-c2': ['career'], 'pp-c3': ['career'],
+    'pp-h1': ['housing'], 'pp-h2': ['housing'], 'pp-h3': ['housing'],
+    'pp-a1': ['assets'], 'pp-a2': ['assets'], 'pp-a3': ['assets'], 'pp-a4': ['assets'],
+    'pp-d1': ['dog'], 'pp-d2': ['dog'], 'pp-d3': ['dog'],
+    'pp-b1': ['biz'], 'pp-b2': ['biz'], 'pp-b3': ['biz'],
+    'pp-y1': ['yasmin'], 'pp-y2': ['yasmin'], 'pp-y3': ['yasmin'],
+  };
+
+  // For each phase bar, calculate based on its sibling tasks
+  document.querySelectorAll('[id^="pp-"]').forEach(bar => {
+    const phaseCard = bar.closest('.phase-card');
+    if (!phaseCard) return;
+    const tasks = phaseCard.querySelectorAll('.task-item');
+    const done = phaseCard.querySelectorAll('.task-item.done');
+    const pct = tasks.length ? (done.length / tasks.length) * 100 : 0;
+    bar.style.width = pct + '%';
+  });
+
+  // Month mini bars (rough)
+  const allPct = [
+    getGroupProgress('career').pct,
+    getGroupProgress('housing').pct,
+    getGroupProgress('assets').pct,
+    getGroupProgress('dog').pct,
+    getGroupProgress('biz').pct,
+    getGroupProgress('yasmin').pct,
+  ];
+  for (let i = 1; i <= 6; i++) {
+    const mb = document.getElementById('mb' + i);
+    if (mb) mb.style.width = (allPct[i - 1] || 0) + '%';
+  }
+}
+
+// ======= TABS =======
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById('panel-' + name);
+  if (panel) { panel.classList.add('active'); panel.classList.add('fade-in'); setTimeout(() => panel.classList.remove('fade-in'), 600); }
+
+  const tabMap = { dashboard: 0, career: 1, housing: 2, assets: 3, dog: 4, biz: 5, yasmin: 6 };
+  const tabs = document.querySelectorAll('.tab');
+  const idx = tabMap[name];
+  if (tabs[idx]) {
+    tabs[idx].classList.add('active');
+    if (name !== 'dashboard') tabs[idx].classList.add(name);
+  }
+}
+
+// Init — start Firebase sync (loads tasks from cloud)
+startFirebaseSync();
+
+// Animate bars on load
+setTimeout(updateProgress, 200);
+
+// ======= PASSWORD =======
+const PASSWORD = 'whisky2025';
+const SESSION_KEY = 'mudanza_auth';
+
+function checkPassword() {
+  const val = document.getElementById('pwd-input').value;
+  const errEl = document.getElementById('login-error');
+  const input = document.getElementById('pwd-input');
+
+  if (val === PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('login-screen').style.opacity = '0';
+    document.getElementById('login-screen').style.transition = 'opacity 0.4s';
+    setTimeout(() => {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app-content').style.display = 'block';
+      updateProgress();
+      setTimeout(updateProgress, 200);
+    }, 400);
+  } else {
+    errEl.textContent = 'Contraseña incorrecta. Intenta de nuevo.';
+    input.classList.add('error');
+    input.value = '';
+    setTimeout(() => { input.classList.remove('error'); errEl.textContent = ''; }, 2000);
+  }
+}
+
+// Allow Enter key
+document.getElementById('pwd-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPassword();
+});
+
+// Expose to window for inline onclick handlers
+window.toggleTask = toggleTask;
+window.showPanel = showPanel;
+window.checkPassword = checkPassword;
+
+// Check session
+if (sessionStorage.getItem(SESSION_KEY) === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-content').style.display = 'block';
+}
+</script>
+</div>
+</body>
+</html>
