@@ -1613,26 +1613,55 @@ function startFirebaseSync() {
 }
 
 const CUSTOM_DOC_REF = doc(db, 'plan', 'custom_tasks');
-let customTasks = []; // { id, group, text, priority, done }
+let customTasks = [];
+let _cardIndexReady = false;
 
-// ---- Custom task helpers ----
+// Tag every phase-card with a stable data-card-index BEFORE anything else
+function tagPhaseCards() {
+  document.querySelectorAll('.phase-card').forEach((card, i) => {
+    card.setAttribute('data-card-index', i);
+  });
+}
+
+// Inject "+ Agregar tarea" buttons
+function injectAddButtons() {
+  document.querySelectorAll('.phase-card').forEach((card) => {
+    if (card.querySelector('.add-task-btn')) return; // don't double-inject
+    const firstTask = card.querySelector('.task-item[data-group]');
+    if (!firstTask) return;
+    const group = firstTask.dataset.group;
+    const cardIndex = card.getAttribute('data-card-index');
+    const btn = document.createElement('button');
+    btn.className = 'add-task-btn';
+    btn.innerHTML = '＋ Agregar tarea';
+    btn.addEventListener('click', () => openAddTaskModal(group, cardIndex));
+    card.appendChild(btn);
+  });
+}
+
 function saveCustomTasks() {
-  return setDoc(CUSTOM_DOC_REF, { tasks: customTasks, updatedAt: new Date().toISOString() });
+  return setDoc(CUSTOM_DOC_REF, {
+    tasks: customTasks,
+    updatedAt: new Date().toISOString()
+  });
 }
 
 function renderCustomTask(task) {
+  // Skip if already in DOM
   if (document.querySelector(`[data-custom-id="${task.id}"]`)) return;
 
-  // Find the exact phase-card by stored cardIndex
+  // Find target task-list by cardIndex
   let taskList = null;
-  if (task.cardIndex !== undefined && task.cardIndex !== null) {
+  if (task.cardIndex !== undefined && task.cardIndex !== null && task.cardIndex !== '') {
     const card = document.querySelector(`.phase-card[data-card-index="${task.cardIndex}"]`);
     if (card) taskList = card.querySelector('.task-list');
   }
-  // Fallback: first task-list of the group
+  // Fallback to first phase-card of the group
   if (!taskList) {
-    const firstItem = document.querySelector(`.task-item[data-group="${task.group}"]`);
-    if (firstItem) taskList = firstItem.closest('.task-list');
+    const firstCard = [...document.querySelectorAll('.phase-card')].find(card =>
+      card.querySelector(`.task-item[data-group="${task.group}"]`)
+    );
+    if (firstCard) taskList = firstCard.querySelector('.task-list');
   }
   if (!taskList) return;
 
@@ -1647,15 +1676,13 @@ function renderCustomTask(task) {
     <span class="task-tag tag-${task.priority || 'media'}">${(task.priority||'media').toUpperCase()}</span>
     <button class="delete-task-btn" data-id="${task.id}" title="Eliminar tarea">✕</button>
   `;
-  div.querySelector('.task-check').addEventListener('click', () => toggleTask(div));
+  div.querySelector('.task-check').addEventListener('click', (e) => { e.stopPropagation(); toggleTask(div); });
   div.querySelector('.task-text').addEventListener('click', () => toggleTask(div));
   div.querySelector('.delete-task-btn').addEventListener('click', (e) => {
     e.stopPropagation();
     deleteCustomTask(task.id);
   });
   taskList.appendChild(div);
-  // Update all progress counters immediately after inserting into DOM
-  updateProgress();
 }
 
 function deleteCustomTask(id) {
@@ -1671,8 +1698,6 @@ function openAddTaskModal(group, cardIndex) {
   document.getElementById('modal-group').value = group;
   document.getElementById('modal-card-index').value = cardIndex ?? '';
   document.getElementById('modal-text').value = '';
-  document.getElementById('modal-priority').value = 'media';
-  // Reset priority buttons to default (media)
   selectPriority('media');
   document.getElementById('add-task-modal').style.display = 'flex';
   setTimeout(() => document.getElementById('modal-text').focus(), 100);
@@ -1695,55 +1720,65 @@ function selectPriority(val) {
 }
 
 async function confirmAddTask() {
-  const group = document.getElementById('modal-group').value;
+  const group     = document.getElementById('modal-group').value;
   const cardIndex = document.getElementById('modal-card-index').value;
-  const text = document.getElementById('modal-text').value.trim();
-  const priority = document.getElementById('modal-priority').value;
+  const text      = document.getElementById('modal-text').value.trim();
+  const priority  = document.getElementById('modal-priority').value;
   if (!text) { document.getElementById('modal-text').focus(); return; }
 
   const task = {
     id: 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
     group,
-    cardIndex: cardIndex !== '' ? parseInt(cardIndex) : null,
+    cardIndex: cardIndex !== '' ? cardIndex : null,
     text,
     priority,
     done: false
   };
-  customTasks.push(task);
-  renderCustomTask(task);  // renders + calls updateProgress
-  closeAddTaskModal();
+
   setSyncStatus('saving');
   try {
+    // 1. Save to Firebase FIRST so onSnapshot fires with the new task
+    customTasks.push(task);
     await saveCustomTasks();
     setSyncStatus('saved');
-  } catch(e) { setSyncStatus('error'); }
+    // renderCustomTask + updateProgress are called by the onSnapshot listener
+  } catch(e) {
+    console.error(e);
+    setSyncStatus('error');
+  }
+  closeAddTaskModal();
 }
 
-// Listen for custom tasks from Firebase
+// Listen for custom tasks — single source of truth
 function startCustomTasksSync() {
   onSnapshot(CUSTOM_DOC_REF, (snap) => {
+    // Remove all existing custom task elements
+    document.querySelectorAll('.custom-task').forEach(el => el.remove());
+
     if (snap.exists()) {
       customTasks = snap.data().tasks || [];
-      // Remove old custom task elements first
-      document.querySelectorAll('.custom-task').forEach(el => el.remove());
-      customTasks.forEach(renderCustomTask);
-      // Reapply done state
-      customTasks.forEach(t => {
-        const el = document.querySelector(`[data-custom-id="${t.id}"]`);
-        if (el) el.classList.toggle('done', !!t.done);
-      });
-      updateProgress();
+    } else {
+      customTasks = [];
     }
+
+    // Re-render all custom tasks
+    customTasks.forEach(renderCustomTask);
+
+    // Update progress AFTER all tasks are in DOM
+    updateProgress();
+    setSyncStatus('saved');
+  }, (err) => {
+    console.error('Custom tasks sync error:', err);
+    setSyncStatus('error');
   });
 }
 
-// Override saveTasks to also persist custom task done states
-const _origSaveTasks = saveTasks;
+// Save main task done states + custom task done states together
 async function saveTasks() {
   setSyncStatus('saving');
   const done = [];
   document.querySelectorAll('.task-item.done').forEach(t => done.push(t.dataset.id));
-  // Update done state in customTasks array too
+  // Sync done state into customTasks array
   customTasks.forEach(t => { t.done = done.includes(t.id); });
   try {
     await Promise.all([
@@ -1757,21 +1792,10 @@ async function saveTasks() {
   }
 }
 
-// Inject "Add task" button into every phase-card and tag with index
-function injectAddButtons() {
-  document.querySelectorAll('.phase-card').forEach((card, cardIndex) => {
-    const taskList = card.querySelector('.task-list');
-    if (!taskList) return;
-    const firstTask = card.querySelector('.task-item[data-group]');
-    if (!firstTask) return;
-    const group = firstTask.dataset.group;
-    card.dataset.cardIndex = cardIndex;
-    const btn = document.createElement('button');
-    btn.className = 'add-task-btn';
-    btn.innerHTML = '＋ Agregar tarea';
-    btn.addEventListener('click', () => openAddTaskModal(group, cardIndex));
-    card.appendChild(btn);
-  });
+function toggleTask(el) {
+  el.classList.toggle('done');
+  saveTasks();
+  updateProgress();
 }
 
 function getGroupProgress(group) {
@@ -1894,9 +1918,13 @@ function showPanel(name) {
   }
 }
 
-// Init — start Firebase sync (loads tasks from cloud)
-startFirebaseSync();
+// Init — order matters:
+// 1. Tag all phase cards with stable indices
+// 2. Inject add-task buttons (uses card indices)
+// 3. Start Firebase syncs (uses card indices to render custom tasks)
+tagPhaseCards();
 injectAddButtons();
+startFirebaseSync();
 startCustomTasksSync();
 
 // Animate bars on load
